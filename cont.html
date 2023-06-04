@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Restaurant</title>
+  <script src="index.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    h1 {
+      text-align: center;
+    }
+    .menu-item {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Welcome to Our Restaurant</h1>
+
+  <div id="menu"></div>
+
+  <button onclick="startRestaurantFlow()">Place Order</button>
+
+  <script>
+    function displayMenu(menuItems) {
+      const menuDiv = document.getElementById('menu');
+      let menuHTML = '<h2>Menu</h2>';
+
+      for (let item of menuItems) {
+        menuHTML += `<div class="menu-item">${item.name} - $${item.price}</div>`;
+      }
+
+      menuDiv.innerHTML = menuHTML;
+    }
+
+    async function startRestaurantFlow() {
+      try {
+        await getMenu();
+        const order = await takeOrder();
+        console.log('Order:', order);
+        const orderStatus = await orderPrep();
+        console.log('Order status:', orderStatus);
+        const paymentStatus = await payOrder();
+        console.log('Payment status:', paymentStatus);
+        if (paymentStatus.paid) {
+          thankYouFnc();
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+
+    getMenu()
+      .then(menuItems => {
+        displayMenu(menuItems);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
+  </script>
+</body>
+</html>
